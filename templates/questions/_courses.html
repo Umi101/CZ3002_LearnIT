@@ -1,0 +1,15 @@
+<ul class="list-group">
+  <li class="list-group-item d-flex justify-content-between align-items-center no-border">
+    <span class="upper bold">Courses:</span>
+  </li>
+  {% for course in courses %}
+    <li class="list-group-item d-flex justify-content-between align-items-center bold no-border">
+      <span>
+        <i class="fas fa-hashtag fa-sm"></i>
+        <a href="{{ course.get_absolute_url }}">
+          <span class="ml-1 bold">{{ course.title }}</span>
+        </a>
+      </span>
+    </li>
+  {% endfor %}
+</ul>

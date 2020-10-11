@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% load bootstrap4 %}
+{% load forum_extras %}
+{% load static %}
+
+{% block title %} {{ question.title }}  {% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static 'css/prism.css' %}">
+{% endblock %}
+
+{% block content %}
+
+  <div class="card card-primary">
+    <div class="card-header">
+      {% if question.owner == request.user %}
+        <span class="float-right">
+          
+          {% if question.solved is not True %}
+            <a id="solved" href="{% url 'solve_question' question.id %}" class="mr-2">Mark as Solved</a>
+          {% endif %}
+
+          <a href="{% url 'update_question' question.slug %}">
+            <i class="far fa-edit text-info"></i>
+          </a>
+          <a href="{% url 'delete_question' question.slug %}">
+            <i class="fas fa-trash-alt ml-2 text-danger"></i>
+          </a>
+        </span>
+      {% endif %}
+      <a href="{% url 'profile' question.owner %}">
+        <img src="{{ question.owner|gravatar:25 }}" class="rounded-circle" alt="user's avatar" width="30px">
+      </a>
+      <h5 class="ml-3 bold d-inline">{{ question.title }}</h5>
+    </div>
+
+    <div class="card-body">
+      <p>
+        {{ question.content|safe }}
+      </p>
+    </div>
+    
+    <div class="card-footer">
+      <strong class="float-right" id="question-likes-counter">
+        {{ question.likes.count }}
+        {% if question.likes.count == 1 %} like {% else %} likes {% endif %}
+      </strong>
+
+      {% question_liked_by question request.user as question_is_liked_by_current_user %}
+
+      {% if request.user.is_authenticated %}
+        {% if question_is_liked_by_current_user %}
+          <img id="question-like" class="mb-2 mr-2 action-icon" data-question="{{ question.id }}" src="{% static 'images/dislike.svg' %}" alt="Dislike icon" width = "30px" height = "30px"/>
+        {% else %}
+          <img id="question-like" class="mb-2 mr-2 action-icon" data-question="{{ question.id }}" src="{% static 'images/like.svg' %}" alt="Like icon" width = "30px" height = "30px"/>
+        {% endif %}
+      {% endif %}
+
+    </div>
+  </div>
+
+  {% for reply in question.replies.all %}
+    {% include 'questions/_reply.html' %} 
+  {% endfor %}
+
+  {% if request.user.is_authenticated %}
+    <div class="mt-5">
+      <div class="">
+        <form action="" method="post" class="form" novalidate>
+          {% csrf_token %}
+          {% bootstrap_field form.content show_label=False %}
+          <button type="submit" class="btn btn-primary" width = "100px">Submit</button>
+        </form>
+      </div>
+    </div>
+  {% else %}
+    <div class="text-center" style="margin-top: 40px;">
+      Please <a href="{% url 'login' %}?next={{request.path}}">login</a> in order to reply or like.
+    </div>
+    <br>
+  {% endif %}
+
+{% endblock %}
+
+
+{% block scripts %}
+  <script src="{% static 'js/prism.js' %}"></script>
+{% endblock %}

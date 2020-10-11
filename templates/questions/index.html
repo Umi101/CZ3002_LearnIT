@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load forum_extras %}
+{% block title %} Welcome {% endblock %}
+
+{% block content %}
+
+  <div class="row mt-4">
+    <div class="col-md-4">
+      {% if not request.user.is_authenticated %}
+        <a href="{% url 'register' %}" class="btn btn-primary btn-block mb-2 btn-padding">
+          Create an Account
+        </a>
+      {% endif %}
+
+      {% include 'questions/_filters.html' %}
+
+      {% show_courses %}
+      
+    </div>
+    <div class="col-md-8">
+      {% for question in question_list %}
+        {% include 'questions/_question.html' %}
+      {% empty %}
+        <h4>No similar questions have been submitted so far. You can submit one by clicking <a href="{% url 'new_question' %}">here</a>!</h4>
+      {% endfor %}
+    </div>
+  </div>
+
+{% endblock %}

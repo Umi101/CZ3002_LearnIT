@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ course.title }}  {% endblock %}
+
+{% block content %}
+
+  <div class="card card-primary">
+    <div class="card-header">
+      <h4>Questions in {{ course.title }}</h4>
+    </div>
+    <div class="card-body">
+      {% for question in course.questions.all %}
+        <article class="mb-4">
+          <a href="{{ question.get_absolute_url }}">
+            <h4>{{ question.title }}</h4>
+          </a>
+          <p>on {{ question.created_at|date:"M d, Y" }} by <a href="{% url 'profile' question.owner %}">{{ question.owner }}</a>  </p>
+          <div class="">
+              {% with content=question.content|striptags %}
+                {{content|slice:"140"}} ...
+              {% endwith %}
+          </div>
+        </article>
+      {% empty %}
+        <h4>No questions in this course. You can add it by clicking <a href="{% url 'new_question' %}">here</a>!</h4>
+      {% endfor %}
+    </div>
+  </div>
+
+{% endblock %}

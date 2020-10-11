@@ -1,0 +1,41 @@
+{% load forum_extras %}
+{% load static %}
+
+<div class="card card-primary">
+  <div class="card-header">
+    <span>{{ reply.creator }} replied:</span>
+
+    {% if reply.creator == request.user %}
+      <span class="float-right">
+        <a href="{% url 'update_reply' reply.question.slug reply.pk %}">
+          <i class="far fa-edit text-info"></i>
+        </a>
+        <a href="{% url 'delete_reply' reply.question.slug reply.pk %}">
+          <i class="fas fa-trash-alt ml-2 text-danger"></i>
+        </a>
+      </span>
+    {% endif %}
+
+  </div>
+  <div class="card-body">
+    <p>
+      {{ reply.content|safe }}
+    </p>
+  </div>
+  <div class="card-footer">
+    <strong id="reply-likes-counter-{{ reply.id }}" class="float-right">
+      {{ reply.likes.count }}
+      {% if reply.likes.count == 1 %} like {% else %} likes {% endif %}
+    </strong>    
+    {% reply_liked_by reply request.user as reply_is_liked_by_current_user %}
+
+    {% if request.user.is_authenticated %}
+      {% if reply_is_liked_by_current_user %}
+        <img class="mb-2 mr-2 action-icon reply-like" data-reply="{{ reply.id }}" src="{% static 'images/dislike.svg' %}" alt="Dislike icon" width = "30px" height = "30px"/>
+      {% else %}
+        <img class="mb-2 mr-2 action-icon reply-like" data-reply="{{ reply.id }}" src="{% static 'images/like.svg' %}" alt="Like icon" width = "30px" height = "30px" />
+      {% endif %}
+    {% endif %}
+
+  </div>
+</div>

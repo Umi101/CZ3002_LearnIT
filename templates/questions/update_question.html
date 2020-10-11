@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% load bootstrap4 %}
+
+{% block title %} {{ question.title }} | Edit {% endblock %}
+
+{% block content %}
+  <div class="col-md-6 offset-md-3 mt-3">
+    <h3>Edit {{ question.title }}</h3>
+
+    <form action="" method="post" class="form" novalidate>
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      <button type="submit" class="btn btn-primary btn-block">Submit</button>
+    </form>
+  </div>
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load forum_extras %}
+{% block title %} Profiles | {{ profile.user.username }}' profile {% endblock %}
+
+{% block jumbotron %}
+  <div class="jumbotron p-4 bg-secondary" style="color: rgb(225, 225, 255);">
+    <div class="container">
+      <img src="{{ profile.user|gravatar:100 }}" alt="user's avatar" class="avatar mr-4 mt-2 mb-2 float-left img-thumbnail">
+      <p>
+        <h2 class="">{{ profile.user.username }}</h2>
+        <h6 class="">{{ profile.city }} {{ profile.state }}</h6>
+        <h6 class="">Joined on {{ profile.joined|date:"F d, Y" }}</h6>
+      </p>
+      <h5 class="mt-5">
+        {{ profile.bio }}
+      </h5>
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+
+  <div class="card card-primary mb-3">
+    <div class="card-header">
+      <h3>Questions submited by {{ profile.user }}</h3>
+    </div>
+    <div class="card-body">
+      {% for question in profile.user.questions.all %}
+        <article class="mb-4">
+          <a href="{{ question.get_absolute_url }}">
+            <h4>{{ question.title }}</h4>
+          </a>
+          <p>in <a href="{% url 'course' question.course.slug %}">{{ question.course }}</a> on {{ question.created_at|date:"M d, Y" }}  </p>
+          <div class="">
+              {% with content=question.content|striptags %}
+                {{content|slice:"140"}} ...
+              {% endwith %}
+          </div>
+        </article>
+      {% empty %}
+        This user haven't submitted any questions yet.
+      {% endfor %}
+    </div>
+  </div>
+
+
+{% endblock %}

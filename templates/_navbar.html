@@ -1,0 +1,57 @@
+{% load forum_extras %}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-dark">
+  <div class="container">
+    <a class="navbar-brand bold" href="/">
+      <em>LearnIT</em>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="true" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <div class="mx-auto">
+        <form class="form-inline" method="GET" action="{% url 'search' %}">
+          <div class="input-group">
+            <input name="q" class="form-control" type="text" placeholder="Search...">
+          </div>
+        </form>
+      </div>
+
+      <ul class="navbar-nav ml-auto">
+        {% if request.user.is_authenticated %}
+          <a class="nav-link bold" href="{% url 'new_question' %}">Ask a Question</a>
+
+          <li class="nav-item dropdown">  
+            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+              <img src="{{ user|gravatar:25 }}" alt="">
+              <span class="ml-1 bold">{{ request.user }}</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <a class="dropdown-item" href="{% url 'profile' request.user.profile.slug %}">View Profile</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{% url 'edit_profile' %}">Edit Profile</a>
+              <a class="dropdown-item" href="{% url 'edit_account' %}">Edit Account</a>
+
+              {% if request.user.is_superuser %}
+                <a class="dropdown-item" href="{% url 'admin:index' %}">Admin Panel</a>
+              {% endif %}
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+            </div>
+          {% else %}
+          <li class="nav-item dropdown">  
+            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+              Welcome Guest
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <a class="dropdown-item" href="{% url 'login' %}">Login</a> 
+              <a class="dropdown-item" href="{% url 'register' %}">Register</a>
+            </div>
+          {% endif %}
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
