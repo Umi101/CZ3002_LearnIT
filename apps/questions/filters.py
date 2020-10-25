@@ -24,4 +24,10 @@ def questions_filter(request, model):
         except ObjectDoesNotExist:
             return False
 
+    elif 'solved' in request and request['solved'] == '0':
+        try:
+            return model.objects.filter(solved=0)
+        except ObjectDoesNotExist:
+            return False
+
     return reversed(get_list_or_404(model))

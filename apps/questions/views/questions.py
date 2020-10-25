@@ -8,7 +8,7 @@ from django.views import generic
 
 from ..filters import questions_filter
 from ..forms import ReplyForm
-from ..models import Question, Reply
+from ..models import Question, Reply, ReportedQuestion
 
 
 # class based views
@@ -107,3 +107,20 @@ def mark_question_as_solved(request, id):
 
     except ObjectDoesNotExist:
         return JsonResponse({'error': 'Question not found'})
+
+def report_question(request, id):
+    try:
+        currentquestion = Question.objects.get(pk=id)
+        
+        if ReportedQuestion.objects.filter(question=currentquestion).exists():
+            return JsonResponse({'message': 'already reported'})
+        
+        else:
+            reportquestion = ReportedQuestion(question=currentquestion)
+            reportquestion.save()
+
+            return JsonResponse({'message': 'reported'})
+
+    except ObjectDoesNotExist:
+        return JsonResponse({'error': 'Question not found'})
+

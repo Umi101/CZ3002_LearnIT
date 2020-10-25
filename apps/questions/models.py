@@ -101,3 +101,16 @@ class Like(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
+
+class ReportedQuestion(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.question.title
+    
+
+class ReportedReply(models.Model):
+    reply = models.ForeignKey(Reply, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "{0} replied to {1}".format(self.reply.creator.username, self.reply.question.title)

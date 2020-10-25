@@ -93,3 +93,24 @@ $('#solved').click(function(event) {
    
   });
 })
+
+// report question
+$('#reported').click(function(event){
+  event.preventDefault();
+  console.log('clicked')
+
+  let url = $(this).attr('href');
+
+  let _this = $(this)
+
+  $.get( url, function( response ){
+    let message = response.message;
+
+    if (message === 'reported'){
+      $(_this).text("REPORTED");
+    }
+    else {
+      $(_this).text("ALREADY REPORTED!");
+    }
+  });
+})

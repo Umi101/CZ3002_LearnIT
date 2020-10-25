@@ -120,8 +120,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'assets'),)
 
-INTERNAL_IPS = ['127.0.0.1', ]
-
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 #EMAIL_BACKEND = config('EMAIL_BACKEND')

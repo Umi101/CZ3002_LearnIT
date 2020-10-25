@@ -3,7 +3,7 @@ from django.shortcuts import get_list_or_404, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
 
-from ..models import Question, Reply
+from ..models import Question, Reply, ReportedReply
 
 
 class ReplyUpdateView(generic.UpdateView):
@@ -54,3 +54,19 @@ def like_or_dislike_reply(request, id):
 
     reply.like(current_user)
     return JsonResponse({'message': 'liked'})
+
+def report_reply(request, id):
+    try:
+        currentreply = get_object_or_404(Reply, pk=id)
+
+        if ReportedReply.objects.filter(reply=currentreply).exists():
+            return JsonResponse({'message': 'already reported'})
+            
+        else:
+            reportreply = ReportedReply(reply=currentreply)
+            reportreply.save()
+
+            return JsonResponse({'message': 'reported'})
+
+    except ObjectDoesNotExist:
+        return JsonResponse({'error': 'Reply not found'})
